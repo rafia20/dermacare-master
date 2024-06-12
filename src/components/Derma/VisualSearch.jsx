@@ -173,7 +173,7 @@ const VisualSearch = ({route}) => {
 
   return (
     <Provider>
-      {/* <GeneralHeader title="Visual Search" /> */}
+       <Text style={styles.headerTitle}>Visual Search</Text>
       <FAB.Group
         style={styles.fab}
         open={false}
@@ -293,6 +293,14 @@ const styles = StyleSheet.create({
     margin: 50,
     borderRadius: 10,
     alignItems: 'center',
+  },
+  headerTitle: {
+    color: 'purple',
+    fontSize: 20,
+    marginTop:20,
+    marginBottom:20,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   fab: {
     position: 'absolute', // Position the FAB absolutely

@@ -228,10 +228,11 @@ const styles = StyleSheet.create({
   
   },
   tittle:{
-      fontSize:22,
+      fontSize:25,
       fontStyle:'normal', 
       fontWeight:'bold',  
       textAlign:'center' ,
+      color:'purple',
       marginTop:10,
   },
   card: {

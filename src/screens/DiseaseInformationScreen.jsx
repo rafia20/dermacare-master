@@ -1,134 +1,9 @@
-import React, { useState } from 'react';
-import { View, ScrollView } from 'react-native';
-import { Searchbar, Card, Button, Text, Divider } from 'react-native-paper';
-
-
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Animated, View, ScrollView, TouchableOpacity } from 'react-native';
+import { Searchbar, Text } from 'react-native-paper';
+import { FontAwesome } from '@expo/vector-icons';
 import DiseaseInformation from "../components/Patient/DiseaseInformation";
-import GeneralHeader from '../components/GeneralHeader';
-import { useEffect } from 'react';
-import { TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
-const dummyDiseases = [
-    { id: 1, name: 'Diabetes', image: 'https://example.com/diabetes.jpg' },
-    { id: 2, name: 'Hypertension', image: 'https://example.com/hypertension.jpg' },
-    { id: 3, name: 'Common Cold', image: 'https://example.com/commoncold.jpg' }
-];
-
-// import image from "../../assets/SameFileFitz/acanthosis nigricans/disease.jpg"
-// import image from "../../assets/SameFileFitz/acne/disease.jpg"
-// import image from "../../assets/SameFileFitz/acne vulgaris/disease.jpg"
-// import image from "../../assets/SameFileFitz/acquired autoimmune bullous diseaseherpes gestationis/disease.jpg"
-// import image from "../../assets/SameFileFitz/acrodermatitis enteropathica/disease.jpg"
-// import image from "../../assets/SameFileFitz/actinic keratosis/disease.jpg"
-// import image from "../../assets/SameFileFitz/allergic contact dermatitis/disease.jpg"
-// import image from "../../assets/SameFileFitz/aplasia cutis/disease.jpg"
-// import image from "../../assets/SameFileFitz/basal cell carcinoma/disease.jpg"
-// import image from "../../assets/SameFileFitz/basal cell carcinoma morpheiform/disease.jpg"
-// import image from "../../assets/SameFileFitz/becker nevus/disease.jpg"
-// import image from "../../assets/SameFileFitz/behcets disease/disease.jpg"
-// import image from "../../assets/SameFileFitz/calcinosis cutis/disease.jpg"
-// import image from "../../assets/SameFileFitz/cheilitis/disease.jpg"
-// import image from "../../assets/SameFileFitz/congenital nevus/disease.jpg"
-// import image from "../../assets/SameFileFitz/dariers disease/disease.jpg"
-// import image from "../../assets/SameFileFitz/dermatofibroma/disease.jpg"
-// import image from "../../assets/SameFileFitz/dermatomyositis/disease.jpg"
-// import image from "../../assets/SameFileFitz/disseminated actinic porokeratosis/disease.jpg"
-// import image from "../../assets/SameFileFitz/drug eruption/disease.jpg"
-// import image from "../../assets/SameFileFitz/drug induced pigmentary changes/disease.jpg"
-// import image from "../../assets/SameFileFitz/dyshidrotic eczema/disease.jpg"
-// import image from "../../assets/SameFileFitz/eczema/disease.jpg"
-// import image from "../../assets/SameFileFitz/ehlers danlos syndrome/disease.jpg"
-// import image from "../../assets/SameFileFitz/epidermal nevus/disease.jpg"
-// import image from "../../assets/SameFileFitz/epidermolysis bullosa/disease.jpg"
-// import image from "../../assets/SameFileFitz/erythema annulare centrifigum/disease.jpg"
-// import image from "../../assets/SameFileFitz/erythema elevatum diutinum/disease.jpg"
-// import image from "../../assets/SameFileFitz/erythema multiforme/disease.jpg"
-// import image from "../../assets/SameFileFitz/erythema nodosum/disease.jpg"
-// import image from "../../assets/SameFileFitz/factitial dermatitis/disease.jpg"
-// import image from "../../assets/SameFileFitz/fixed eruptions/disease.jpg"
-// import image from "../../assets/SameFileFitz/folliculitis/disease.jpg"
-// import image from "../../assets/SameFileFitz/fordyce spots/disease.jpg"
-// import image from "../../assets/SameFileFitz/granuloma annulare/disease.jpg"
-// import image from "../../assets/SameFileFitz/granuloma pyogenic/disease.jpg"
-// import image from "../../assets/SameFileFitz/hailey hailey disease/disease.jpg"
-// import image from "../../assets/SameFileFitz/halo nevus/disease.jpg"
-// import image from "../../assets/SameFileFitz/hidradenitis/disease.jpg"
-// import image from "../../assets/SameFileFitz/ichthyosis vulgaris/disease.jpg"
-// import image from "../../assets/SameFileFitz/incontinentia pigmenti/disease.jpg"
-// import image from "../../assets/SameFileFitz/juvenile xanthogranuloma/disease.jpg"
-// import image from "../../assets/SameFileFitz/kaposi sarcoma/disease.jpg"
-// import image from "../../assets/SameFileFitz/keloid/disease.jpg"
-// import image from "../../assets/SameFileFitz/keratosis pilaris/disease.jpg"
-// import image from "../../assets/SameFileFitz/langerhans cell histiocytosis/disease.jpg"
-// import image from "../../assets/SameFileFitz/lentigo maligna/disease.jpg"
-// import image from "../../assets/SameFileFitz/lichen amyloidosis/disease.jpg"
-// import image from "../../assets/SameFileFitz/lichen planus/disease.jpg"
-// import image from "../../assets/SameFileFitz/lichen simplex/disease.jpg"
-// import image from "../../assets/SameFileFitz/livedo reticularis/disease.jpg"
-// import image from "../../assets/SameFileFitz/lupus erythematosus/disease.jpg"
-// import image from "../../assets/SameFileFitz/lupus subacute/disease.jpg"
-// import image from "../../assets/SameFileFitz/lyme disease/disease.jpg"
-// import image from "../../assets/SameFileFitz/lymphangioma/disease.jpg"
-// import image from "../../assets/SameFileFitz/malignant melanoma/disease.jpg"
-// import image from "../../assets/SameFileFitz/melanoma/disease.jpg"
-// import image from "../../assets/SameFileFitz/milia/disease.jpg"
-// import image from "../../assets/SameFileFitz/mucinosis/disease.jpg"
-// import image from "../../assets/SameFileFitz/mucous cyst/disease.jpg"
-// import image from "../../assets/SameFileFitz/mycosis fungoides/disease.jpg"
-// import image from "../../assets/SameFileFitz/myiasis/disease.jpg"
-// import image from "../../assets/SameFileFitz/naevus comedonicus/disease.jpg"
-// import image from "../../assets/SameFileFitz/necrobiosis lipoidica/disease.jpg"
-// import image from "../../assets/SameFileFitz/nematode infection/disease.jpg"
-// import image from "../../assets/SameFileFitz/neurodermatitis/disease.jpg"
-// import image from "../../assets/SameFileFitz/neurofibromatosis/disease.jpg"
-// import image from "../../assets/SameFileFitz/neurotic excoriations/disease.jpg"
-// import image from "../../assets/SameFileFitz/neutrophilic dermatoses/disease.jpg"
-// import image from "../../assets/SameFileFitz/nevocytic nevus/disease.jpg"
-// import image from "../../assets/SameFileFitz/nevus sebaceous of jadassohn/disease.jpg"
-// import image from "../../assets/SameFileFitz/papilomatosis confluentes and reticulate/disease.jpg"
-// import image from "../../assets/SameFileFitz/paronychia/disease.jpg"
-// import image from "../../assets/SameFileFitz/pediculosis lids/disease.jpg"
-// import image from "../../assets/SameFileFitz/perioral dermatitis/disease.jpg"
-// import image from "../../assets/SameFileFitz/photodermatoses/disease.jpg"
-// import image from "../../assets/SameFileFitz/pilar cyst/disease.jpg"
-// import image from "../../assets/SameFileFitz/pilomatricoma/disease.jpg"
-// import image from "../../assets/SameFileFitz/pityriasis lichenoides chronica/disease.jpg"
-// import image from "../../assets/SameFileFitz/pityriasis rosea/disease.jpg"
-// import image from "../../assets/SameFileFitz/pityriasis rubra pilaris/disease.jpg"
-// import image from "../../assets/SameFileFitz/porokeratosis actinic/disease.jpg"
-// import image from "../../assets/SameFileFitz/porokeratosis of mibelli/disease.jpg"
-// import image from "../../assets/SameFileFitz/porphyria/disease.jpg"
-// import image from "../../assets/SameFileFitz/port wine stain/disease.jpg"
-// import image from "../../assets/SameFileFitz/prurigo nodularis/disease.jpg"
-// import image from "../../assets/SameFileFitz/psoriasis/disease.jpg"
-// import image from "../../assets/SameFileFitz/pustular psoriasis/disease.jpg"
-// import image from "../../assets/SameFileFitz/pyogenic granuloma/disease.jpg"
-// import image from "../../assets/SameFileFitz/rhinophyma/disease.jpg"
-// import image from "../../assets/SameFileFitz/rosacea/disease.jpg"
-// import image from "../../assets/SameFileFitz/sarcoidosis/disease.jpg"
-// import image from "../../assets/SameFileFitz/scabies/disease.jpg"
-// import image from "../../assets/SameFileFitz/scleroderma/disease.jpg"
-// import image from "../../assets/SameFileFitz/scleromyxedema/disease.jpg"
-// import image from "../../assets/SameFileFitz/seborrheic dermatitis/disease.jpg"
-// import image from "../../assets/SameFileFitz/seborrheic keratosis/disease.jpg"
-// import image from "../../assets/SameFileFitz/solid cystic basal cell carcinoma/disease.jpg"
-// import image from "../../assets/SameFileFitz/squamous cell carcinoma/disease.jpg"
-// import image from "../../assets/SameFileFitz/stasis edema/disease.jpg"
-// import image from "../../assets/SameFileFitz/stevens johnson syndrome/disease.jpg"
-// import image from "../../assets/SameFileFitz/striae/disease.jpg"
-// import image from "../../assets/SameFileFitz/sun damaged skin/disease.jpg"
-// import image from "../../assets/SameFileFitz/superficial spreading melanoma ssm/disease.jpg"
-// import image from "../../assets/SameFileFitz/syringoma/disease.jpg"
-// import image from "../../assets/SameFileFitz/telangiectases/disease.jpg"
-// import image from "../../assets/SameFileFitz/tick bite/disease.jpg"
-// import image from "../../assets/SameFileFitz/tuberous sclerosis/disease.jpg"
-// import image from "../../assets/SameFileFitz/tungiasis/disease.jpg"
-// import image from "../../assets/SameFileFitz/urticaria/disease.jpg"
-// import image from "../../assets/SameFileFitz/urticaria pigmentosa/disease.jpg"
-// import image from "../../assets/SameFileFitz/vitiligo/disease.jpg"
-// import image from "../../assets/SameFileFitz/xanthomas/disease.jpg"
-// import image from "../../assets/SameFileFitz/xeroderma pigmentosum/disease.jpg"
 
 const dermatologicalConditions = [
     "acanthosis nigricans",
@@ -247,7 +122,6 @@ const dermatologicalConditions = [
     "xeroderma pigmentosum",
 ];
 
-
 const dermatologicalConditionsImages = [
     require("../../assets/SameFileFitz/acanthosis nigricans/disease.jpg"),
     require("../../assets/SameFileFitz/acne/disease.jpg"),
@@ -365,22 +239,36 @@ const dermatologicalConditionsImages = [
     require("../../assets/SameFileFitz/xeroderma pigmentosum/disease.jpg"),
 ];
 
-
-
-  const xyz = "../../assets/SameFileFitz/xeroderma pigmentosum/disease.jpg";
 const DiseaseInformationScreen = () => {
-    const navigation = useNavigation(); 
+    const navigation = useNavigation();
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filteredDiseases, setFilteredDiseases] = useState(dermatologicalConditions || []);
+
+    const bannerOpacity = new Animated.Value(0);
+
     useEffect(() => {
         console.log("DiseaseInformationScreen mounted");
         dermatologicalConditions.forEach(disease => {
             console.log(disease);
-        }
-        );
+        });
 
-    }
-    , []);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [filteredDiseases, setFilteredDiseases] = useState(dermatologicalConditions);
+        // Animation for the banner
+        Animated.loop(
+            Animated.sequence([
+                Animated.timing(bannerOpacity, {
+                    toValue: 1,
+                    duration: 2000,
+                    useNativeDriver: true
+                }),
+                Animated.timing(bannerOpacity, {
+                    toValue: 0,
+                    duration: 2000000,
+                    useNativeDriver: true
+                })
+            ])
+        ).start();
+
+    }, []);
 
     const onChangeSearch = query => {
         setSearchQuery(query);
@@ -391,33 +279,98 @@ const DiseaseInformationScreen = () => {
             setFilteredDiseases(dermatologicalConditions);
         }
     };
-    
 
-
-
-    
     return (
-        <View style={{ flex: 1 }}>
-            {/* <GeneralHeader title="Disease Information" /> */}
+        <View style={styles.container}>
+            <View style={styles.header}>
+                <Text style={styles.headerTitle}>Disease Search Library</Text>
+                <Animated.View style={{ ...styles.banner, opacity: bannerOpacity }}>
+                    <FontAwesome name="stethoscope" size={24} color="purple" />
+                    <Text style={styles.bannerText}>Welcome to the Disease Search Library. Search disease images and chat about symptoms and treatments with AI, all sourced from dermatologists' books.</Text>
+                </Animated.View>
+            </View>
             <Searchbar
-                mode='view'
+                style={styles.searchBar}
                 placeholder="Search Diseases"
                 onChangeText={onChangeSearch}
                 value={searchQuery}
             />
-            <Text />
-            {filteredDiseases.length === 0 && <Text>No diseases found</Text>}
-            <ScrollView style={{margin: 4, marginHorizontal: 20}}>
+            {filteredDiseases.length === 0 && <Text style={styles.noDiseases}>No diseases found</Text>}
+            <ScrollView style={styles.scrollView}>
                 {filteredDiseases.map((disease, index) => (
-                    <View>
-                        
-                        <TouchableOpacity onPress={()=>navigation.navigate("Visual Search", {"image": dermatologicalConditionsImages[index]})}><DiseaseInformation key={index} disease={disease} image={dermatologicalConditionsImages[index]} /></TouchableOpacity>
-                        <Text />
+                    <View key={index} style={styles.card}>
+                        <TouchableOpacity onPress={() => navigation.navigate("Visual Search", { "image": dermatologicalConditionsImages[index] })}>
+                            <DiseaseInformation disease={disease} image={dermatologicalConditionsImages[index]} />
+                        </TouchableOpacity>
                     </View>
                 ))}
             </ScrollView>
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        paddingHorizontal: 10,
+        backgroundColor: '#f8f9fa'
+    },
+    header: {
+        backgroundColor: '#f8f9fa',
+        padding: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    headerTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: 'purple',
+    },
+    banner: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: 'purple',
+        padding: 10,
+        borderRadius: 5,
+        marginTop: 10,
+    },
+    bannerText: {
+        marginLeft: 10,
+        fontSize: 14,
+        color: 'white',
+        textAlign: 'center',
+        flexShrink: 1,
+    },
+    searchBar: {
+        marginVertical: 10,
+        marginHorizontal: 20,
+    },
+    scrollView: {
+        marginVertical: 5,
+        marginHorizontal: 20,
+    },
+    card: {
+        marginVertical: 5,
+        padding: 10,
+        backgroundColor: 'white',
+        borderRadius: 7,
+        shadowColor: 'purple',
+        shadowOffset: { width: 0.5, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 3,
+    },
+    noDiseases: {
+        textAlign: 'center',
+        marginTop: 20,
+        fontSize: 16,
+        color: 'red',
+    },
+    button: {
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        backgroundColor: '#007bff',
+        borderRadius: 5,
+    },
+});
 
 export default DiseaseInformationScreen;
